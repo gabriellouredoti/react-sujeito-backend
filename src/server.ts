@@ -6,6 +6,10 @@ import path from "path";
 
 import { router } from "./routes";
 
+// usando swagger
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "../swagger.json";
+
 const app = express();
 
 app.use(express.json());
@@ -32,5 +36,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 		message: "Internal server error",
 	});
 });
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(8081, () => console.log("server is running"));

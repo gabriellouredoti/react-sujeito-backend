@@ -1,0 +1,456 @@
+{
+	"openapi": "3.0.1",
+	"info": {
+		"title": "Products",
+		"description": "Documentation from products api",
+		"version": "1.0.0"
+	},
+	"basePath": "/api/v1",
+	"servers": [
+		{
+			"url": "http://localhost:8081/api/v1"
+		}
+	],
+	"components": {
+		"securitySchemes": {
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		}
+	},
+	"paths": {
+		"/auth": {
+			"post": {
+				"tags": ["Authenticate"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"email": {
+										"type": "string"
+									},
+									"password": {
+										"type": "string"
+									}
+								},
+								"example": {
+									"email": "gabriel31@email.com",
+									"password": "123"
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"400": {
+						"description": "Erro desconhecido"
+					},
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/users": {
+			"post": {
+				"tags": ["Users"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string"
+									},
+									"email": {
+										"type": "string"
+									},
+									"password": {
+										"type": "string"
+									}
+								},
+								"example": {
+									"name": "Gabriel",
+									"email": "gabriel@email.com",
+									"password": "123"
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"400": {
+						"description": "Erro desconhecido"
+					},
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/me": {
+			"get": {
+				"security": [{ "bearerAuth": [] }],
+				"description": "Busca usuário logado",
+				"sumary": "Busca usuário logado",
+				"tags": ["Users/Me"],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"401": {
+						"description": "Não autorizado"
+					}
+				}
+			}
+		},
+		"/category/product": {
+			"get": {
+				"security": [{ "bearerAuth": [] }],
+				"description": "Busca produtos atraves de categorias",
+				"sumary": "Busca produtos por categoria",
+				"tags": ["Category/Product"],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "category_id",
+						"type": "string",
+						"required": true,
+						"default": "49484e55-c2d2-40fa-9137-7bf4b393cfd2"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"401": {
+						"description": "Não autorizado"
+					}
+				}
+			}
+		},
+		"/category": {
+			"get": {
+				"security": [{ "bearerAuth": [] }],
+				"description": "Busca todas as categorias",
+				"sumary": "Busca todas as categorias",
+				"tags": ["Category"],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"401": {
+						"description": "Não autorizado"
+					}
+				}
+			},
+			"post": {
+				"security": [{ "bearerAuth": [] }],
+				"tags": ["Category"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string"
+									}
+								},
+								"example": {
+									"name": "Pizzas"
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"401": {
+						"description": "Não autorizado"
+					},
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/product": {
+			"post": {
+				"security": [{ "bearerAuth": [] }],
+				"tags": ["Product"],
+				"requestBody": {
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string",
+										"default": "Pizza"
+									},
+									"price": {
+										"type": "string",
+										"default": "19.90"
+									},
+									"description": {
+										"type": "string",
+										"default": "Pizza da casa"
+									},
+									"category_id": {
+										"type": "string",
+										"default": "49484e55-c2d2-40fa-9137-7bf4b393cfd2"
+									},
+									"file": {
+										"type": "array",
+										"items": {
+											"format": "binary",
+											"type": "string"
+										}
+									}
+								}
+							},
+							"encoding": {
+								"file": {
+									"contentType": ["image/png", "image/jpg"]
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"400": {
+						"description": "Erro desconhecido"
+					},
+					"200": {
+						"description": "OK"
+					}
+				}
+			},
+			"get": {
+				"security": [{ "bearerAuth": [] }],
+				"description": "Busca todos os produtos",
+				"sumary": "Busca todos os produtos",
+				"tags": ["Product"],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"401": {
+						"description": "Não autorizado"
+					}
+				}
+			}
+		},
+		"/order": {
+			"post": {
+				"security": [{ "bearerAuth": [] }],
+				"tags": ["Order"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"table": {
+										"type": "string"
+									},
+									"name": {
+										"type": "integer"
+									}
+								},
+								"example": {
+									"table": 51,
+									"name": "Mesa 51"
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"400": {
+						"description": "Erro desconhecido"
+					},
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/order/add": {
+			"post": {
+				"security": [{ "bearerAuth": [] }],
+				"tags": ["Order"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"order_id": {
+										"type": "string"
+									},
+									"product_id": {
+										"type": "string"
+									},
+									"amount": {
+										"type": "integer"
+									}
+								},
+								"example": {
+									"order_id": "b1c09df9-a061-48d3-a096-49cfdebb0679",
+									"product_id": "7677731e-b5ab-44a6-8922-1b1fc8653843",
+									"amount": 5
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"400": {
+						"description": "Erro desconhecido"
+					},
+					"200": {
+						"description": "OK"
+					}
+				}
+			}
+		},
+		"/order/detail": {
+			"get": {
+				"security": [{ "bearerAuth": [] }],
+				"description": "Busca pedido atraves do id",
+				"sumary": "Busca pedido atraves do id",
+				"tags": ["Order"],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "order_id",
+						"type": "string",
+						"required": true,
+						"default": "b1c09df9-a061-48d3-a096-49cfdebb0679"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"401": {
+						"description": "Não autorizado"
+					}
+				}
+			}
+		},
+		"/order/send": {
+			"put": {
+				"security": [{ "bearerAuth": [] }],
+				"description": "Envia pedido",
+				"sumary": "Envia pedido",
+				"tags": ["Order"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"order_id": {
+										"type": "string"
+									}
+								},
+								"example": {
+									"order_id": "b1c09df9-a061-48d3-a096-49cfdebb0679"
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"401": {
+						"description": "Não autorizado"
+					}
+				}
+			}
+		},
+		"/order/finish": {
+			"put": {
+				"security": [{ "bearerAuth": [] }],
+				"description": "Finaliza Pedido",
+				"sumary": "Finaliza Pedido",
+				"tags": ["Order"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"order_id": {
+										"type": "string"
+									}
+								},
+								"example": {
+									"order_id": "b1c09df9-a061-48d3-a096-49cfdebb0679"
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"401": {
+						"description": "Não autorizado"
+					}
+				}
+			}
+		},
+		"/order/remove": {
+			"delete": {
+				"security": [{ "bearerAuth": [] }],
+				"description": "Remove pedido",
+				"sumary": "Remove pedido",
+				"tags": ["Order"],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "item_id",
+						"type": "string",
+						"required": true,
+						"default": "b1c09df9-a061-48d3-a096-49cfdebb0679"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"401": {
+						"description": "Não autorizado"
+					}
+				}
+			}
+		},
+		"/orders": {
+			"get": {
+				"security": [{ "bearerAuth": [] }],
+				"description": "Busca todos os pedidos",
+				"sumary": "Busca todos os pedidos",
+				"tags": ["Orders"],
+				"responses": {
+					"200": {
+						"description": "OK"
+					},
+					"401": {
+						"description": "Não autorizado"
+					}
+				}
+			}
+		}
+	}
+}
